@@ -1,0 +1,18 @@
+# plot Energy sub metering
+# read the needed libraries
+library("sqldf")
+library("tcltk")
+dev.off()
+data <- read.csv.sql("household_power_consumption.txt",sep=';',sql="select * from file where Date='1/2/2007' or Date='2/2/2007' ")
+data <- na.omit(data)
+y1 <- na.omit(data$Sub_metering_1)
+y2 <- na.omit(data$Sub_metering_2)
+y3 <- na.omit(data$Sub_metering_3)
+x <- paste(data$Date, data$Time)
+x <- strptime(x, "%d/%m/%Y %H:%M:%S")
+plot(x,y1,type='l',ylab="Energy sub metering",xlab='',ylim=(c(min(y1,y2,y3),6 + max(y1,y2,y3))))
+lines(x,y2,type='l',col='green')
+lines(x,y3,type='l',col='blue')
+legend('topright',lty =1,legend = c("Sub_metering_1", "Sub_metering_2",'Sub_metering_3'),col=c('black','green','blue'), border=False)
+dev.copy(png, file='plot3.png')
+dev.off()
